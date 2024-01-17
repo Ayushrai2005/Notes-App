@@ -46,9 +46,9 @@ class MainActivity : AppCompatActivity() , NotesAdapter.ClickListener {
 
 
 
-        notesViewModel.getAllNotes().observe(this){
+        notesViewModel.getAllNotes().observe(this){listOfNotes->
             //observer block
-            notesAdapter = NotesAdapter (it)
+            notesAdapter = NotesAdapter(listOfNotes , this)
             rv.adapter = notesAdapter
             rv.layoutManager = LinearLayoutManager(this)
 
@@ -57,7 +57,7 @@ class MainActivity : AppCompatActivity() , NotesAdapter.ClickListener {
         }
 
         fab.setOnClickListener {
-            openDialog()
+            openDialog(comingFromFloatingActionButton = true)
         }
 
     }
@@ -79,9 +79,14 @@ class MainActivity : AppCompatActivity() , NotesAdapter.ClickListener {
                 noteContent = edtnoteContent.text.toString()
             )
 
-            if(comingFromFloatingActionButton)
+            if(comingFromFloatingActionButton){
+                notesViewModel.insert(note)
+            }else{
+                notesViewModel.update(note)
 
-            notesViewModel.insert(note)
+            }
+
+
             dialog.dismiss()
         }
         dialog.show()
@@ -100,9 +105,13 @@ class MainActivity : AppCompatActivity() , NotesAdapter.ClickListener {
         
     }
 
-    override fun updateNote() {
+    override fun updateNote(note : Note) {
         //write the logic of updating
-        openDialog()
+        openDialog(comingFromFloatingActionButton = false)
 
+    }
+
+    override fun delete(note: Note) {
+        notesViewModel.delete(note)
     }
 }

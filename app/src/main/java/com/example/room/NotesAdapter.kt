@@ -13,7 +13,7 @@ import java.security.PrivateKey
 
 class NotesAdapter(
     private val listOfNotes : List<Note>,
-    private val ClickListener : ClickListener
+    private val clickListener : ClickListener
 ) : RecyclerView.Adapter<NotesAdapter.NotesViewHolder>(){
 
     class NotesViewHolder(
@@ -43,11 +43,16 @@ class NotesAdapter(
         holder.textContent.text = currentNote.noteContent
 
         holder.itemView.setOnClickListener{
-            ClickListener.updateNote(currentNote)
+            clickListener.updateNote(currentNote)
+        }
+        holder.imgDelete.setOnClickListener{
+            clickListener.delete(currentNote)
+
         }
     }
 
     interface ClickListener{
         fun updateNote(note : Note)
+        fun delete(note : Note)
     }
 }
